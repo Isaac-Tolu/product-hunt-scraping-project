@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-LINK = "https://www.producthunt.com/leaderboard/daily/2024/1/25"
+LINK = "https://www.producthunt.com/leaderboard/daily/2024/1/26"
 IMPORTANT_ATTRS = {
     "product_section_class": "styles_item__Dk_nz",
     "product_title_class": "styles_titleContainer__qZRNa",
@@ -50,7 +50,7 @@ def get_top_products(tag):
         else:
             d["is_bootstrapped"] = False
         
-        topics = [i for i in extras_content if i != "#"]
+        topics = [i for i in extras_content if i != "•"]
 
         d["topics"] = topics
 
@@ -63,8 +63,8 @@ def get_top_products(tag):
 if __name__ == "__main__":
     soup = get_ph_soup()
     
-    print(soup.main)
+    # print(soup.main)
 
-    # ts = get_top_products(soup.main)
-    # print(ts)
+    ts = get_top_products(soup.main)
+    #print(ts)
 
