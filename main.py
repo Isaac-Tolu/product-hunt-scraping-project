@@ -3,13 +3,13 @@ from bs4 import BeautifulSoup
 
 
 LINK = "https://www.producthunt.com/leaderboard/daily/2024/1/26"
-IMPORTANT_ATTRS = {
-    "product_section_class": "styles_item__Dk_nz",
-    "product_title_class": "styles_titleContainer__qZRNa",
-    "product_extras_class": "styles_extraInfo__Xs_5Y",
-    "product_vote_button_dt": "vote-button",
-    "product_vote-button_class": "styles_voteCountItem__zwuqk",
-}
+
+PRODUCT_SECTION__CLASS = "styles_item__Dk_nz"
+PRODUCT_TITLE__CLASS = "styles_titleContainer__qZRNa"
+PRODUCT_EXTRAS__CLASS = "styles_extraInfo__Xs_5Y"
+PRODUCT_VOTE_BUTTON__DATA_CLASS = "vote-button"
+PRODUCT_VOTE_BUTTON_CLASS = "styles_voteCountItem__zwuqk"
+
 
 
 def get_ph_soup() -> BeautifulSoup:
@@ -25,11 +25,11 @@ def get_ph_soup() -> BeautifulSoup:
 def get_top_products(tag):
     a = []
 
-    for product_tag in tag.find_all(class_=IMPORTANT_ATTRS["product_section_class"]):
+    for product_tag in tag.find_all(class_=PRODUCT_SECTION__CLASS):
         d = {}
 
-        title_tag  = product_tag.find(class_=IMPORTANT_ATTRS["product_title_class"])
-        extras_tag = product_tag.find(class_=IMPORTANT_ATTRS["product_extras_class"])
+        title_tag  = product_tag.find(class_=PRODUCT_TITLE__CLASS)
+        extras_tag = product_tag.find(class_=PRODUCT_EXTRAS__CLASS)
 
         d["link"] = title_tag.a["href"]
         title_content = list(title_tag.stripped_strings)
