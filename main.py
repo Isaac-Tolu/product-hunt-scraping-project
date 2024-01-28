@@ -14,9 +14,8 @@ IMPORTANT_ATTRS = {
 
 def get_ph_soup() -> BeautifulSoup:
     """
-    Returns the HTML soup for Product Hunt
+    Gets the Product Hunt page and returns the HTML soup.
     """
-    
     response = requests.get(LINK)
     response.raise_for_status()
 
@@ -66,5 +65,5 @@ if __name__ == "__main__":
     # print(soup.main)
 
     ts = get_top_products(soup.main)
-    #print(ts)
+    # print(ts)
 
