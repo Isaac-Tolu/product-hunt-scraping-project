@@ -31,19 +31,19 @@ def get_top_products(tag):
         extras_tag = product_tag.find(class_=PRODUCT_EXTRAS__CLASS)
         title_content = list(title_tag.stripped_strings)
         filters_and_topics = [a["href"] for a in extras_tag.find_all('a')]
-        print(filters_and_topics)
-        filters = [i.split("=")[-1] for i in filters_and_topics if i.startswith("/?filters")]
-        print(filters)
-        topics = [i.split("/")[-1] for i in filters_and_topics if i.startswith("/topics")]
-        print(topics)
-        print("\n\n")
+        # print(filters_and_topics)
+        # filters = [i.split("=")[-1] for i in filters_and_topics if i.startswith("/?filters")]
+        # print(filters)
+        # topics = [i.split("/")[-1] for i in filters_and_topics if i.startswith("/topics")]
+        # print(topics)
+        # print("\n\n")
 
         d["name"] = title_content[0]
         d["description"] = title_content[-1]
         d["link"] = title_tag.a["href"]
-        d["is_solo_maker"] = is_solo_maker(filters)
-        d["is_bootstrapped"] = is_bootstrapped(filters)
-        d["topics"] = topics
+        d["is_solo_maker"] = check_filter(filters_and_topics, "soloMaker")
+        d["is_bootstrapped"] = check_filter(filters_and_topics, "bootstrapped")
+        d["topics"] = get_topics(filters_and_topics)
 
         
         # if "Solo maker" in extras_content:
@@ -65,25 +65,36 @@ def get_top_products(tag):
         a.append(d)
 
     return a
-    
-## List -> Boolean
-## return true if the soloMaker filter is one of the URLs, otherwise false
-def is_solo_maker(l):
-    if "soloMaker" in l:
+
+
+def check_filter(l, filter):
+
+    filters = [i.split("=")[-1] for i in l if i.startswith("/?filters")]
+    if filter in filters:
         return True
     return False
 
-## List -> Boolean
-## return true if the bootstrapped filter is one of the URLs, otherwise false
-def is_bootstrapped(l):
-    if "bootstrapped" in l:
-        return True
-    return False
+
+# ## List -> Boolean
+# ## return true if the soloMaker filter is one of the URLs, otherwise false
+# def is_solo_maker(l):
+#     if "soloMaker" in l:
+#         return True
+#     return False
+
+# ## List -> Boolean
+# ## return true if the bootstrapped filter is one of the URLs, otherwise false
+# def is_bootstrapped(l):
+#     if "bootstrapped" in l:
+#         return True
+#     return False
 
 ## List -> List
 ## Extract the topics from their URLs and return them
 def get_topics(l):
-    ...
+    
+    topics = [i.split("/")[-1] for i in l if i.startswith("/topics")]
+    return topics
 
 
 if __name__ == "__main__":
