@@ -4,12 +4,11 @@ from bs4 import BeautifulSoup
 
 LINK = "https://www.producthunt.com/leaderboard/daily/2024/1/26"
 
-PRODUCT_SECTION__CLASS = "styles_item__Dk_nz"
-PRODUCT_TITLE__CLASS = "styles_titleContainer__qZRNa"
-PRODUCT_EXTRAS__CLASS = "styles_extraInfo__Xs_5Y"
+PRODUCT_SECTION__CLASS          = "styles_item__Dk_nz"
+PRODUCT_TITLE__CLASS            = "styles_titleContainer__qZRNa"
+PRODUCT_EXTRAS__CLASS           = "styles_extraInfo__Xs_5Y"
 PRODUCT_VOTE_BUTTON__DATA_CLASS = "vote-button"
-PRODUCT_VOTE_BUTTON_CLASS = "styles_voteCountItem__zwuqk"
-
+PRODUCT_VOTE_BUTTON_CLASS       = "styles_voteCountItem__zwuqk"
 
 
 def get_ph_soup() -> BeautifulSoup:
