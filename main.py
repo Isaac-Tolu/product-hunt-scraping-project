@@ -23,6 +23,15 @@ def get_ph_soup() -> BeautifulSoup:
     return soup
 
 def get_top_products(tag:Tag) -> list[dict]:
+    """
+    Extract these information from each product on the page
+      {
+        name: str, description: str, link: str,
+        is_solo_maker: bool, is_bootstrapped: bool,
+        topics: list[str]
+      }
+    Returns these objects in a list
+    """
     products = []
 
     for product_tag in tag.find_all(class_=PRODUCT_SECTION__CLASS):
@@ -45,14 +54,18 @@ def get_top_products(tag:Tag) -> list[dict]:
 
 
 def check_filter(extras:list[str], filter:str) -> bool:
-
+    """
+    Extract filters from extras and
+    return True if `filter` exists in the result
+    otherwise, False
+    """
     filters = [link.split("=")[-1] for link in extras if link.startswith("/?filters")]
     if filter in filters:
         return True
     return False
 
 def get_topics(extras:list[str]):
-    
+    """Extract topics from extras"""
     topics = [link.split("/")[-1] for link in extras if link.startswith("/topics")]
     return topics
 
