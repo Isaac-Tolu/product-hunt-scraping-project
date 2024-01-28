@@ -1,8 +1,9 @@
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 
 LINK = "https://www.producthunt.com/leaderboard/daily/2024/1/26"
+PARSER = 'html.parser'
 
 PRODUCT_SECTION__CLASS          = "styles_item__Dk_nz"
 PRODUCT_TITLE__CLASS            = "styles_titleContainer__qZRNa"
@@ -18,90 +19,44 @@ def get_ph_soup() -> BeautifulSoup:
     response = requests.get(LINK)
     response.raise_for_status()
 
-    soup = BeautifulSoup(response.text, 'html.parser')
+    soup = BeautifulSoup(response.text, PARSER)
     return soup
 
-def get_top_products(tag):
-    a = []
+def get_top_products(tag:Tag) -> list[dict]:
+    products = []
 
     for product_tag in tag.find_all(class_=PRODUCT_SECTION__CLASS):
-        d = {}
+        product_info = {}
 
         title_tag  = product_tag.find(class_=PRODUCT_TITLE__CLASS)
         extras_tag = product_tag.find(class_=PRODUCT_EXTRAS__CLASS)
         title_content = list(title_tag.stripped_strings)
-        filters_and_topics = [a["href"] for a in extras_tag.find_all('a')]
-        # print(filters_and_topics)
-        # filters = [i.split("=")[-1] for i in filters_and_topics if i.startswith("/?filters")]
-        # print(filters)
-        # topics = [i.split("/")[-1] for i in filters_and_topics if i.startswith("/topics")]
-        # print(topics)
-        # print("\n\n")
+        extras_links = [a_tag["href"] for a_tag in extras_tag.find_all('a')]
 
-        d["name"] = title_content[0]
-        d["description"] = title_content[-1]
-        d["link"] = title_tag.a["href"]
-        d["is_solo_maker"] = check_filter(filters_and_topics, "soloMaker")
-        d["is_bootstrapped"] = check_filter(filters_and_topics, "bootstrapped")
-        d["topics"] = get_topics(filters_and_topics)
+        product_info["name"] = title_content[0]
+        product_info["description"] = title_content[-1]
+        product_info["link"] = title_tag.a["href"]
+        product_info["is_solo_maker"] = check_filter(extras_links, "soloMaker")
+        product_info["is_bootstrapped"] = check_filter(extras_links, "bootstrapped")
+        product_info["topics"] = get_topics(extras_links)
 
-        
-        # if "Solo maker" in extras_content:
-        #     d["is_solo_maker"] = True
-        #     extras_content.remove("Solo maker")
-        # else:
-        #     d["is_solo_maker"] = False
-
-        # if "Bootstrapped" in extras_content:
-        #     d["is_bootstrapped"] = True
-        #     extras_content.remove("Bootstrapped")
-        # else:
-        #     d["is_bootstrapped"] = False
-        
-        # topics = [i for i in extras_content if i != "•"]
-
-        # d["topics"] = topics
-
-        a.append(d)
-
-    return a
+        products.append(product_info)
+    return products
 
 
-def check_filter(l, filter):
+def check_filter(extras:list[str], filter:str) -> bool:
 
-    filters = [i.split("=")[-1] for i in l if i.startswith("/?filters")]
+    filters = [link.split("=")[-1] for link in extras if link.startswith("/?filters")]
     if filter in filters:
         return True
     return False
 
-
-# ## List -> Boolean
-# ## return true if the soloMaker filter is one of the URLs, otherwise false
-# def is_solo_maker(l):
-#     if "soloMaker" in l:
-#         return True
-#     return False
-
-# ## List -> Boolean
-# ## return true if the bootstrapped filter is one of the URLs, otherwise false
-# def is_bootstrapped(l):
-#     if "bootstrapped" in l:
-#         return True
-#     return False
-
-## List -> List
-## Extract the topics from their URLs and return them
-def get_topics(l):
+def get_topics(extras:list[str]):
     
-    topics = [i.split("/")[-1] for i in l if i.startswith("/topics")]
+    topics = [link.split("/")[-1] for link in extras if link.startswith("/topics")]
     return topics
 
 
 if __name__ == "__main__":
     soup = get_ph_soup()
-    
-    # print(soup.main)
-
     ts = get_top_products(soup.main)
-    # print(ts)
-
