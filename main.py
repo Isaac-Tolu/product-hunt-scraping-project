@@ -5,12 +5,11 @@ from bs4 import BeautifulSoup, Tag
 LINK = "https://www.producthunt.com/leaderboard/daily/2024/1/26"
 PARSER = 'html.parser'
 
-PRODUCT_SECTION__CLASS          = "styles_item__Dk_nz"
-PRODUCT_TITLE__CLASS            = "styles_titleContainer__qZRNa"
-PRODUCT_BY__CLASS               = "styles_container__EoS8Q"
-PRODUCT_EXTRAS__CLASS           = "styles_extraInfo__Xs_5Y"
-PRODUCT_VOTE_BUTTON__DATA_CLASS = "vote-button"
-PRODUCT_VOTE_BUTTON_CLASS       = "styles_voteCountItem__zwuqk"
+PRODUCT_SECTION__CLASS    = "styles_item__Dk_nz"
+PRODUCT_TITLE__CLASS      = "styles_titleContainer__qZRNa"
+PRODUCT_BY__CLASS         = "styles_container__EoS8Q"
+PRODUCT_EXTRAS__CLASS     = "styles_extraInfo__Xs_5Y"
+PRODUCT_VOTE_BUTTON__CLASS = "styles_voteCountItem__zwuqk"
 
 
 def get_ph_soup() -> BeautifulSoup:
@@ -25,13 +24,13 @@ def get_ph_soup() -> BeautifulSoup:
 
 def get_top_products(tag:Tag) -> list[dict]:
     """
-    Extract these information from each product on the page
+    Extract these data from each product on the page:
       {
-        name: str, description: str, link: str,
+        name: str, description: str, link: str, "by": str,
         is_solo_maker: bool, is_bootstrapped: bool,
         topics: list[str]
       }
-    Returns these objects in a list
+    Returns the result as a list of dictionaries.
     """
     products = []
 
@@ -41,6 +40,7 @@ def get_top_products(tag:Tag) -> list[dict]:
         title_tag = product_tag.find(class_=PRODUCT_TITLE__CLASS)
         by_tag = product_tag.find(class_=PRODUCT_BY__CLASS)
         extras_tag = product_tag.find(class_=PRODUCT_EXTRAS__CLASS)
+        upvote_count_tag = product_tag.find(class_=PRODUCT_VOTE_BUTTON__CLASS)
 
         title_content = get_title_contents(title_tag)
         if by_tag is None:
@@ -48,6 +48,7 @@ def get_top_products(tag:Tag) -> list[dict]:
         else:
             by_content = get_by_contents(by_tag)
         extras_content = get_extras_content(extras_tag)
+        vote_count = get_current_vote_count(upvote_count_tag)
 
         product_info["name"] = title_content[0]
         product_info["description"] = title_content[1]
@@ -56,11 +57,13 @@ def get_top_products(tag:Tag) -> list[dict]:
         product_info["is_solo_maker"] = extras_content[0]
         product_info["is_bootstrapped"] = extras_content[1]
         product_info["topics"] = extras_content[2]
+        product_info["current_votes"] = vote_count[0]
 
         products.append(product_info)
     return products
 
 def get_title_contents(tag:Tag):
+    """Extract the title section of the page"""
     a_tag = tag.find('a')
     content = list(a_tag.stripped_strings)
     return (content[0],
@@ -68,11 +71,13 @@ def get_title_contents(tag:Tag):
             a_tag['href'])
 
 def get_by_contents(tag:Tag):
+    """Extract the product owner section of the page"""
     a_tag = tag.find('a')
     return (a_tag['href'],)
 
 
 def get_extras_content(tag:Tag):
+    """Extract the extras section of the page"""
     links = [a_tag["href"] for a_tag in tag.find_all('a')]
     solo_maker_filter   = check_filter(links, "soloMaker")
     bootstrapped_filter = check_filter(links, "bootstrapped")
@@ -81,6 +86,10 @@ def get_extras_content(tag:Tag):
     return (solo_maker_filter,
             bootstrapped_filter,
             topics)
+
+def get_current_vote_count(tag:Tag):
+    """Extract the current vote count number from page"""
+    return (tag.text,)
 
 def check_filter(extras:list[str], filter:str) -> bool:
     """
@@ -93,7 +102,7 @@ def check_filter(extras:list[str], filter:str) -> bool:
         return True
     return False
 
-def get_topics(extras:list[str]):
+def get_topics(extras:list[str]) -> list[str]:
     """Extract topics from extras"""
     topics = [link for link in extras if link.startswith("/topics")]
     return topics
