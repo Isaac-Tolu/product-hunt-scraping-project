@@ -3,7 +3,7 @@
 ## Objective
 Scrape and extract data of products launched on Product Hunt.
 
-The goal is to create a data pipeline that extracts the data at the end of each day and sends it to a database foe further processing
+The goal is to create a data pipeline that extracts the data at the end of each day and sends it to a database for further processing
 
 ## Tools
 - Requests
