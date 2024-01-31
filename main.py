@@ -1,8 +1,9 @@
 import requests
 from bs4 import BeautifulSoup, Tag
+from datetime import datetime, timedelta
 
 
-LINK = "https://www.producthunt.com/leaderboard/daily/2024/1/26"
+URL = "https://www.producthunt.com/"
 PARSER = 'html.parser'
 
 PRODUCT_SECTION__CLASS    = "styles_item__Dk_nz"
@@ -16,7 +17,13 @@ def get_ph_soup() -> BeautifulSoup:
     """
     Gets the Product Hunt page and returns the HTML soup.
     """
-    response = requests.get(LINK)
+    yesterday = get_yesterday()
+    year, month, day = yesterday.year, yesterday.month, yesterday.day
+    url = URL + f"leaderboard/daily/{year}/{month}/{day}"
+
+    print(f"Getting {url}\n")
+
+    response = requests.get(url)
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, PARSER)
@@ -106,6 +113,10 @@ def get_topics(extras:list[str]) -> list[str]:
     """Extract topics from extras"""
     topics = [link for link in extras if link.startswith("/topics")]
     return topics
+
+def get_yesterday() -> datetime:
+    """Returns the datetime object for yesterday"""
+    return datetime.today() - timedelta(days=1)
 
 
 if __name__ == "__main__":
