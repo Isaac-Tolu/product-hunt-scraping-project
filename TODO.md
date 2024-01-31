@@ -1,4 +1,6 @@
 - Change the code so that it always runs for the previous day
+- Refactor
+- Research the change in class attributes as the days pass by
 - Add storage capabilities
     - CSV
     - JSON
