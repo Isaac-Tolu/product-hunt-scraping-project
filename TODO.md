@@ -1,0 +1,6 @@
+- Change the code so that it always runs for the previous day
+- Add storage capabilities
+    - CSV
+    - JSON
+    - Google Sheets
+    - Excel
