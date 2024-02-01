@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup, Tag
 from datetime import datetime, timedelta
+from utils import to_csv
 
 
 URL = "https://www.producthunt.com/"
@@ -122,3 +123,8 @@ def get_yesterday() -> datetime:
 if __name__ == "__main__":
     soup = get_ph_soup()
     ts = get_top_products(soup.main)
+
+    to_csv(ts)
+
+
+
