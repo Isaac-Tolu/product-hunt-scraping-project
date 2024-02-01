@@ -1,7 +1,7 @@
 - Refactor
-- Research the change in class attributes as the days pass by
 - Add storage capabilities
     - CSV
     - JSON
     - Google Sheets
     - Excel
+- Build a new scraper based on structure, not class attributes
