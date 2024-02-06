@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup, Tag
 from datetime import datetime, timedelta
-from phunt.utils import to_csv
+from utils import to_csv
 
 
 URL = "https://www.producthunt.com/"
