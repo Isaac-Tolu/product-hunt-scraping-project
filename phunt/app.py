@@ -47,18 +47,18 @@ def get_extras_section(tag:bs4.Tag) -> tuple[str|None, bool, bool, list[str]]:
             check_filter(links_and_text, "bootstrapped"),
             get_topics(links_and_text))
 
-def get_company(tag:bs4.Tag) -> str|None:
+def get_company(extra:tuple[str, str]) -> str|None:
     """Extract the company (if there is)"""
     return None
 
-def check_filter(extras:list[str], filter:str) -> bool:
+def check_filter(extras:list[tuple[str, str]], filter:str) -> bool:
     """
     Return True if `filter` exists in extras
     otherwise, False.
     """
     return False
 
-def get_topics(extras:list[str]) -> list[str]:
+def get_topics(extras:list[tuple[str, str]]) -> list[str]:
     """Extract topics from extras, if any"""
     return []
 
