@@ -1,4 +1,5 @@
 
+PARSER = 'html.parser'
 PRODUCT_SECTION__CLASS    = "styles_item__Dk_nz"
 PRODUCT_TITLE__CLASS      = "styles_titleContainer__qZRNa"
 PRODUCT_BY__CLASS         = "styles_container__br9Sy"
