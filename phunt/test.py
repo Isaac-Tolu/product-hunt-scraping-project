@@ -11,11 +11,11 @@ class TestGetTitleSection(unittest.TestCase):
 
     def test_one(self):
         self.assertEqual(get_title_section(tags[0]),
-                          ("OpenArt", "App Store for AI Images", "/posts/openart-2"))
+                          ("OpenArt", "App store for AI image apps", "/posts/openart-2"))
 
     def test_two(self):
         self.assertEqual(get_title_section(tags[1]),
-                          ("ShareGPT", "Share your GPTs with anyone, no OpenAI subscription needed", "/posts/share-gpt"))
+                          ("Share GPT", "Share your GPTs with anyone, no OpenAI subscription needed", "/posts/share-gpt"))
         
     def test_three(self):
         self.assertEqual(get_title_section(tags[2]),
