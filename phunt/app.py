@@ -1,6 +1,6 @@
 import bs4
 
-from constants import PRODUCT_TITLE__CLASS
+from constants import PRODUCT_TITLE__CLASS, PRODUCT_EXTRAS__CLASS
 
 
 """
@@ -27,15 +27,40 @@ def get_title_section(tag:bs4.Tag) -> tuple[str, str, str]:
 
     return (content[0], content[-1], a_tag['href'])
 
-def get_extras_section(tag:bs4.Tag) -> tuple[str|None, str, str, list[str]]:
+def get_extras_section(tag:bs4.Tag) -> tuple[str|None, bool, bool, list[str]]:
     """
     Extract the:
         - company (if there is),
         - whether is the product was done solo (is_solo_maker),
         - whether the product was bootstrapped (is_bootstrapped),
         - all the topics (tags) associated with the product
+
+        (company, is_solo_maker, is_bootstrapped, topics)
     """
-    return ()
+
+    extras_tag = tag.find(class_=PRODUCT_EXTRAS__CLASS)
+    a_tags = extras_tag.find_all('a')
+    links_and_text = [(a_tag['href'], a_tag.text) for a_tag in a_tags]
+
+    return (get_company(links_and_text[0]),
+            check_filter(links_and_text, "soloMaker"),
+            check_filter(links_and_text, "bootstrapped"),
+            get_topics(links_and_text))
+
+def get_company(tag:bs4.Tag) -> str|None:
+    """Extract the company (if there is)"""
+    return None
+
+def check_filter(extras:list[str], filter:str) -> bool:
+    """
+    Return True if `filter` exists in extras
+    otherwise, False.
+    """
+    return False
+
+def get_topics(extras:list[str]) -> list[str]:
+    """Extract topics from extras, if any"""
+    return []
 
 def get_votes_section(tag:bs4.Tag) -> tuple[str]:
     """Extract the number of current votes at the time of extraction"""
