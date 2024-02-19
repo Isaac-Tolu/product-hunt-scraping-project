@@ -13,14 +13,14 @@ I divided the page structure into three:
     - votes
         - current_votes
 """
-def get_title_section(tag:bs4.Tag, class_name:str) -> tuple[str, str]:
+def get_title_section(tag:bs4.Tag) -> tuple[str, str]:
     """
-     Extract the name and description of the product
-        (name, description)
+     Extract the name, description, and link of the product
+        (name, description, link)
     """
-    ...
+    return ()
 
-def get_extras_section(tag:bs4.Tag, class_name:str) -> tuple[str|None, str, str, list[str]]:
+def get_extras_section(tag:bs4.Tag) -> tuple[str|None, str, str, list[str]]:
     """
     Extract the:
         - company (if there is),
@@ -28,8 +28,8 @@ def get_extras_section(tag:bs4.Tag, class_name:str) -> tuple[str|None, str, str,
         - whether the product was bootstrapped (is_bootstrapped),
         - all the topics (tags) associated with the product
     """
-    ...
+    return ()
 
-def get_votes_section(tag:bs4.Tag, class_name:str) -> tuple[str]:
+def get_votes_section(tag:bs4.Tag) -> tuple[str]:
     """Extract the number of current votes at the time of extraction"""
-    ...
+    return ()
