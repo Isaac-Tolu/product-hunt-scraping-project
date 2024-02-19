@@ -1,6 +1,8 @@
 import unittest
 from startup import startup
-from app import (get_title_section, get_extras_section, get_votes_section)
+from app import (get_title_section, get_extras_section, 
+    get_votes_section, get_company, check_filter, get_topics
+)
 from constants import PRODUCT_SECTION__CLASS
 
 soup = startup()
@@ -29,11 +31,90 @@ class TestGetExtrasSection(unittest.TestCase):
         
     def test_two(self):
         self.assertEqual(get_extras_section(tags[1]),
-                          (None, False, True, ['SaaS', '', 'Artificial Intelligence', 'No-Code']))
+                          (None, False, True, ['SaaS', 'Artificial Intelligence', 'No-Code']))
         
     def test_three(self):
         self.assertEqual(get_extras_section(tags[2]),
                           (None, True, True, ['Languages', 'SEO']))
+        
+class TestGetCompany(unittest.TestCase):
+
+    def test_one(self):
+        self.assertEqual(get_company(("/products/openart", "OpenArt.ai")),
+                         "OpenArt.ai")
+        
+    def test_two(self):
+        self.assertIsNone(get_company(('/?filters=bootstrapped', 'Bootstrapped')))
+
+    def test_three(self):
+        self.assertIsNone(get_company(('/?filters=soloMaker', 'Solo maker')))       
+
+class TestCheckFilter(unittest.TestCase):
+
+    def test_one_a(self):
+        self.assertFalse(check_filter([('/products/openart', 'OpenArt.ai'),
+                            ('/topics/design-tools', 'Design Tools'),
+                            ('/topics/saas', 'SaaS'),
+                            ('/topics/artificial-intelligence', 'Artificial Intelligence')
+                        ], "soloMaker"))
+        
+    def test_one_b(self):
+        self.assertFalse(check_filter([('/products/openart', 'OpenArt.ai'),
+                            ('/topics/design-tools', 'Design Tools'),
+                            ('/topics/saas', 'SaaS'),
+                            ('/topics/artificial-intelligence', 'Artificial Intelligence')],
+                        "bootstrapped"))
+        
+    def test_two_a(self):
+        self.assertFalse(check_filter([('/?filters=bootstrapped', 'Bootstrapped'),
+                            ('/topics/saas', 'SaaS'),
+                            ('/topics/artificial-intelligence', 'Artificial Intelligence'),
+                            ('/topics/no-code', 'No-Code')],
+                        "soloMaker"))
+        
+    def test_two_b(self):
+        self.assertTrue(check_filter([('/?filters=bootstrapped', 'Bootstrapped'),
+                            ('/topics/saas', 'SaaS'),
+                            ('/topics/artificial-intelligence', 'Artificial Intelligence'),
+                            ('/topics/no-code', 'No-Code')],
+                        "bootstrapped"))
+        
+    def test_three_a(self):
+        self.assertTrue(check_filter([('/?filters=soloMaker', 'Solo maker'),
+                            ('/?filters=bootstrapped', 'Bootstrapped'),
+                            ('/topics/languages', 'Languages'),
+                            ('/topics/seo', 'SEO')],
+                        "soloMaker"))
+        
+    def test_three_b(self):
+        self.assertTrue(check_filter([('/?filters=soloMaker', 'Solo maker'),
+                            ('/?filters=bootstrapped', 'Bootstrapped'),
+                            ('/topics/languages', 'Languages'),
+                            ('/topics/seo', 'SEO')],
+                        "bootstrapped"))
+        
+class TestGetTopics(unittest.TestCase):
+
+    def test_one(self):
+        self.assertEqual(get_topics([('/products/openart', 'OpenArt.ai'),
+                            ('/topics/design-tools', 'Design Tools'),
+                            ('/topics/saas', 'SaaS'),
+                            ('/topics/artificial-intelligence', 'Artificial Intelligence')]),
+                        ["Design Tools", "SaaS", "Artificial Intelligence"])
+        
+    def test_two(self):
+        self.assertEqual(get_topics([('/?filters=bootstrapped', 'Bootstrapped'),
+                            ('/topics/saas', 'SaaS'),
+                            ('/topics/artificial-intelligence', 'Artificial Intelligence'),
+                            ('/topics/no-code', 'No-Code')]),
+                        ["SaaS", "Artificial Intelligence", "No-Code"])
+        
+    def test_three(self):
+        self.assertEqual(get_topics([('/?filters=soloMaker', 'Solo maker'),
+                            ('/?filters=bootstrapped', 'Bootstrapped'),
+                            ('/topics/languages', 'Languages'),
+                            ('/topics/seo', 'SEO')]),
+                        ["Languages", "SEO"])   
         
 class TestGetVotesSection(unittest.TestCase):
 
