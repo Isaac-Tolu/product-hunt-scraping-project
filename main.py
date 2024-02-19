@@ -124,7 +124,7 @@ if __name__ == "__main__":
     soup = get_ph_soup()
     ts = get_top_products(soup.main)
 
-    to_csv(ts)
+    # to_csv(ts)
 
 
 
