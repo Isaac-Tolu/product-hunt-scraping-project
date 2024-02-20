@@ -60,6 +60,12 @@ def check_filter(extras:list[tuple[str, str]], filter:str) -> bool:
     Return True if `filter` exists in extras
     otherwise, False.
     """
+
+    filters = [extra[0].split("=")[-1]
+               for extra in extras
+               if extra[0].startswith("/?filters")]
+    if filter in filters:
+        return True
     return False
 
 def get_topics(extras:list[tuple[str, str]]) -> list[str]:
