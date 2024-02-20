@@ -120,15 +120,15 @@ class TestGetVotesSection(unittest.TestCase):
 
     def test_one(self):
         self.assertEqual(get_votes_section(tags[0]),
-                          (845,))
+                          ("845",))
         
     def test_two(self):
-        self.assertEqual(get_votes_section(tags[0]),
-                          (356,))
+        self.assertEqual(get_votes_section(tags[1]),
+                          ("356",))
         
     def test_three(self):
-        self.assertEqual(get_votes_section(tags[0]),
-                          (112,))
+        self.assertEqual(get_votes_section(tags[2]),
+                          ("112",))
 
 
 if __name__ == "__main__":

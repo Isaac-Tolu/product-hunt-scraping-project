@@ -1,6 +1,6 @@
 import bs4
 
-from constants import PRODUCT_TITLE__CLASS, PRODUCT_EXTRAS__CLASS
+from constants import PRODUCT_TITLE__CLASS, PRODUCT_EXTRAS__CLASS, PRODUCT_VOTE_BUTTON__CLASS
 
 
 """
@@ -78,4 +78,6 @@ def get_topics(extras:list[tuple[str, str]]) -> list[str]:
 
 def get_votes_section(tag:bs4.Tag) -> tuple[str]:
     """Extract the number of current votes at the time of extraction"""
-    return ()
+
+    votes_tag = tag.find(class_=PRODUCT_VOTE_BUTTON__CLASS)
+    return (votes_tag.text,)
