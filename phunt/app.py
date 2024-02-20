@@ -50,6 +50,9 @@ def get_extras_section(tag:bs4.Tag) -> tuple[str|None, bool, bool, list[str]]:
 # wishlists
 def get_company(extra:tuple[str, str]) -> str|None:
     """Extract the company (if there is)"""
+
+    if extra[0].startswith("/products/"):
+        return extra[1]
     return None
 
 def check_filter(extras:list[tuple[str, str]], filter:str) -> bool:
