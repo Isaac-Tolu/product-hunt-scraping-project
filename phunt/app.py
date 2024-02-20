@@ -47,6 +47,7 @@ def get_extras_section(tag:bs4.Tag) -> tuple[str|None, bool, bool, list[str]]:
             check_filter(links_and_text, "bootstrapped"),
             get_topics(links_and_text))
 
+# wishlists
 def get_company(extra:tuple[str, str]) -> str|None:
     """Extract the company (if there is)"""
     return None
