@@ -70,7 +70,11 @@ def check_filter(extras:list[tuple[str, str]], filter:str) -> bool:
 
 def get_topics(extras:list[tuple[str, str]]) -> list[str]:
     """Extract topics from extras, if any"""
-    return []
+
+    topics = [extra[1]
+              for extra in extras
+              if extra[0].startswith("/topics/")]
+    return topics
 
 def get_votes_section(tag:bs4.Tag) -> tuple[str]:
     """Extract the number of current votes at the time of extraction"""
